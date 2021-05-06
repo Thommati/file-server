@@ -4,14 +4,16 @@ const { PORT } = require('./constants');
 
 const server = net.createServer();
 
-server.on('connection', client => {
+server.on('connection', socket => {
   console.log('Client connected');
-  client.write('What file are you looking for?');
+  socket.write('What file are you looking for?');
   
-  client.setEncoding('utf8');
-  client.on('data', data => {
+  socket.setEncoding('utf8');
+  socket.on('data', data => {
     console.log('Client\'s request:', data);
-    handleFileRequest(data);
+    handleFileRequest(data, (file) => {
+      socket.write(file);
+    });
   });
 });
 
